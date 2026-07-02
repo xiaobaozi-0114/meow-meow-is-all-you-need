@@ -1,0 +1,7 @@
+OPENROUTER_API_KEY=sk-or-v1-your-free-key
+OPENROUTER_MODEL=openrouter/free
+SITE_TITLE=猫猫大全
+SITE_URL=http://127.0.0.1:5173/
+ALLOWED_ORIGIN=http://127.0.0.1:5173
+# Optional per visitor limit when CHAT_LIMIT_KV is configured in Cloudflare.
+# DAILY_CHAT_LIMIT=20

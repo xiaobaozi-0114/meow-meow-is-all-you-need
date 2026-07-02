@@ -1,0 +1,20 @@
+name = "catpedia-chat"
+main = "workers/openrouter-chat.js"
+compatibility_date = "2026-07-02"
+workers_dev = true
+preview_urls = false
+
+[vars]
+OPENROUTER_MODEL = "openrouter/free"
+SITE_TITLE = "Meow Meow"
+SITE_URL = "https://catpedia-chat.xiaoyi-catpedia.workers.dev/"
+ALLOWED_ORIGIN = "*"
+
+# Optional zero-cost guardrail:
+# create a free KV namespace and uncomment this block to cap each visitor per day.
+#
+# [[kv_namespaces]]
+# binding = "CHAT_LIMIT_KV"
+# id = "paste-your-kv-namespace-id-here"
+#
+# DAILY_CHAT_LIMIT = "20"

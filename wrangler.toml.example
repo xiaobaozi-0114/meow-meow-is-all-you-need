@@ -1,0 +1,20 @@
+name = "catpedia-chat"
+main = "workers/openrouter-chat.js"
+compatibility_date = "2026-07-02"
+
+[vars]
+OPENROUTER_MODEL = "openrouter/free"
+SITE_TITLE = "猫猫大全"
+SITE_URL = "https://your-github-username.github.io/your-repo/"
+ALLOWED_ORIGIN = "https://your-github-username.github.io"
+# DAILY_CHAT_LIMIT = "20"
+
+# Optional: bind a free Cloudflare KV namespace to cap each visitor per day.
+# Create it with:
+#   wrangler kv namespace create CHAT_LIMIT_KV
+# Then uncomment and paste the returned id.
+#
+# [[kv_namespaces]]
+# binding = "CHAT_LIMIT_KV"
+# id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+#
