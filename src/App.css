@@ -1029,12 +1029,13 @@ dd {
 
 .disease-search-panel {
   display: grid;
-  gap: 10px;
-  margin: 18px 0;
-  padding: 14px;
+  gap: 12px;
+  margin: 20px 0;
+  padding: 16px;
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: #fff;
+  background: linear-gradient(180deg, #fff, #f8fbfa);
+  box-shadow: 0 12px 30px rgba(29, 45, 41, 0.06);
 }
 
 .disease-search-meta {
@@ -1047,37 +1048,67 @@ dd {
 
 .emergency-grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
 }
 
 .emergency-card {
+  position: relative;
+  overflow: hidden;
   padding: 18px;
   align-content: start;
+  box-shadow: 0 14px 34px rgba(29, 45, 41, 0.07);
+}
+
+.emergency-card::before {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 4px;
+  content: '';
+  background: #79b7ad;
+}
+
+.emergency-risk-急诊::before {
+  background: #b33122;
+}
+
+.emergency-risk-尽快就医::before {
+  background: #d8902f;
+}
+
+.emergency-risk-观察::before {
+  background: #1f6f68;
 }
 
 .risk-head {
-  display: grid;
-  gap: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+  align-items: center;
   margin-bottom: 14px;
 }
 
-.disease-category {
-  width: fit-content;
-  color: #1f6f68;
-  font-size: 13px;
-  font-weight: 900;
+.risk-head h2 {
+  flex: 1 1 100%;
+  font-size: clamp(22px, 2.5vw, 28px);
 }
 
 .compact-tags {
   gap: 6px;
+  width: 100%;
 }
 
 .compact-tags span {
+  color: #52635f;
+  background: #f4f1ec;
   font-size: 12px;
 }
 
 .risk-badge {
   width: fit-content;
   padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 900;
 }
 
 .risk-观察 {
@@ -1095,8 +1126,53 @@ dd {
   background: #b33122;
 }
 
-.emergency-card h3 {
-  margin: 14px 0 8px;
+.emergency-highlight {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 9px;
+  margin: 12px 0 14px;
+  padding: 12px;
+  border-radius: 8px;
+  color: #6d2218;
+  background: #fff1ef;
+  line-height: 1.65;
+}
+
+.emergency-highlight svg {
+  margin-top: 3px;
+  color: #b33122;
+}
+
+.emergency-highlight p {
+  margin: 0;
+}
+
+.disease-card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.disease-block {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid #edf1ef;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.disease-block-muted {
+  background: #f7faf8;
+}
+
+.disease-block-danger {
+  border-color: #f4ddd8;
+  background: #fffaf8;
+}
+
+.disease-block h3 {
+  margin: 0 0 9px;
+  color: #17221f;
   font-size: 14px;
 }
 
@@ -1162,6 +1238,7 @@ dd {
   .two-column,
   .ranking-preview,
   .emergency-grid,
+  .disease-card-grid,
   .tip-grid {
     grid-template-columns: 1fr;
   }

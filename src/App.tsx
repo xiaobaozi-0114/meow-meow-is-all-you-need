@@ -637,14 +637,14 @@ function EmergencyPage() {
     <div className="page">
       <PageTitle
         icon={<HeartPulse />}
-        title="猫咪常见疾病查询"
-        desc="按疾病和症状整理可观察信号、就医建议、居家临时处理和危险信号，不替代兽医诊断。"
+        title="猫咪常见疾病与症状查询"
+        desc="输入症状或疾病名，先判断轻重缓急，再查看到医院前可以做什么。"
       />
       <div className="emergency-banner">
         <AlertTriangle size={24} />
         <div>
-          <strong>出现呼吸异常、尿不出、误食毒物、严重外伤、持续抽搐时，请直接去急诊。</strong>
-          <span>不要在网上等待诊断，也不要自行使用人用药。</span>
+          <strong>呼吸异常、尿不出、误食毒物、严重外伤、持续抽搐，直接去急诊。</strong>
+          <span>本页只帮你做初步分诊和临时处理参考，不替代兽医诊断。</span>
         </div>
       </div>
       <section className="disease-search-panel" aria-label="疾病搜索">
@@ -653,7 +653,7 @@ function EmergencyPage() {
           <input
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="搜索疾病或症状：尿闭、软便、猫鼻支、口臭、猫癣..."
+            placeholder="搜索症状或疾病：尿不出、软便、猫鼻支、口臭、猫癣..."
           />
         </label>
         <div className="disease-search-meta">
@@ -666,7 +666,6 @@ function EmergencyPage() {
           <article className={`emergency-card emergency-risk-${tip.risk}`} key={tip.id}>
             <div className="risk-head">
               <RiskBadge risk={tip.risk} />
-              <span className="disease-category">{tip.category}</span>
               <h2>{tip.disease}</h2>
               <div className="tag-row compact-tags">
                 {tip.aliases.slice(0, 6).map((alias) => (
@@ -674,31 +673,44 @@ function EmergencyPage() {
                 ))}
               </div>
             </div>
-            <h3>可观测症状</h3>
-            <ul className="check-list">
-              {tip.symptoms.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
-            <h3>就医建议</h3>
-            <ul className="check-list">
-              {tip.vetAdvice.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
-            <h3>居家临时处理</h3>
-            <ul className="check-list">
-              {tip.homeCare.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
-            <h3>不要做</h3>
-            <ul className="danger-list">
-              {tip.doNot.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
-            <p className="go-now">{tip.emergencySigns}</p>
+            <div className="emergency-highlight">
+              <AlertTriangle size={18} />
+              <p>{tip.emergencySigns}</p>
+            </div>
+            <div className="disease-card-grid">
+              <section className="disease-block">
+                <h3>看得到的表现</h3>
+                <ul className="check-list">
+                  {tip.symptoms.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </section>
+              <section className="disease-block">
+                <h3>什么时候去医院</h3>
+                <ul className="check-list">
+                  {tip.vetAdvice.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </section>
+              <section className="disease-block disease-block-muted">
+                <h3>到医院前可以做</h3>
+                <ul className="check-list">
+                  {tip.homeCare.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </section>
+              <section className="disease-block disease-block-danger">
+                <h3>不要做</h3>
+                <ul className="danger-list">
+                  {tip.doNot.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </section>
+            </div>
             <SourceList sources={tip.sources} />
           </article>
         ))}
