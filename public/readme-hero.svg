@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="340" viewBox="0 0 1200 340" role="img" aria-labelledby="title desc">
+  <title id="title">Meow Meow</title>
+  <desc id="desc">Your all-in-one cat care guide</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#12b8a6">
+        <animate attributeName="stop-color" values="#12b8a6;#0f766e;#12b8a6" dur="8s" repeatCount="indefinite" />
+      </stop>
+      <stop offset="56%" stop-color="#0f766e">
+        <animate attributeName="stop-color" values="#0f766e;#2dd4bf;#0f766e" dur="8s" repeatCount="indefinite" />
+      </stop>
+      <stop offset="100%" stop-color="#f59e0b">
+        <animate attributeName="stop-color" values="#f59e0b;#fbbf24;#f59e0b" dur="8s" repeatCount="indefinite" />
+      </stop>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="50%" r="55%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity=".55" />
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+    </radialGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="16" stdDeviation="18" flood-color="#083b36" flood-opacity=".24" />
+    </filter>
+    <style>
+      .title { font: 800 76px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; letter-spacing: .5px; }
+      .subtitle { font: 700 25px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+      .small { font: 700 17px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; letter-spacing: 4px; text-transform: uppercase; }
+      .float { animation: float 3.8s ease-in-out infinite; transform-origin: 870px 172px; }
+      .tail { animation: tail 1.8s ease-in-out infinite; transform-origin: 795px 180px; }
+      .paw { animation: paw 1.6s ease-in-out infinite; transform-origin: 887px 210px; }
+      .spark { animation: twinkle 2.4s ease-in-out infinite; }
+      .spark.two { animation-delay: .65s; }
+      .spark.three { animation-delay: 1.15s; }
+      @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+      @keyframes tail { 0%,100% { transform: rotate(-6deg); } 50% { transform: rotate(9deg); } }
+      @keyframes paw { 0%,100% { transform: rotate(0deg); } 50% { transform: rotate(-14deg); } }
+      @keyframes twinkle { 0%,100% { opacity: .28; transform: scale(.9); } 50% { opacity: 1; transform: scale(1.12); } }
+    </style>
+  </defs>
+
+  <rect width="1200" height="340" rx="34" fill="url(#bg)" />
+  <circle cx="238" cy="58" r="150" fill="url(#glow)" opacity=".35" />
+  <circle cx="1040" cy="94" r="190" fill="url(#glow)" opacity=".22" />
+  <path d="M0 260 C150 222 278 286 435 244 C608 198 745 270 915 236 C1058 209 1138 230 1200 248 L1200 340 L0 340 Z" fill="#f8faf7" opacity=".88" />
+  <path d="M0 286 C180 242 326 304 504 266 C675 230 840 286 1013 260 C1092 248 1152 251 1200 262 L1200 340 L0 340 Z" fill="#ffffff" opacity=".82" />
+
+  <g transform="translate(88 78)">
+    <text class="small" x="0" y="0" fill="#d9fff8" opacity=".92">CAT CARE COMPANION</text>
+    <text class="title" x="0" y="88" fill="#ffffff">Meow Meow</text>
+    <text class="subtitle" x="4" y="130" fill="#eafff9">All your cat questions, one friendly place.</text>
+    <rect x="4" y="156" width="318" height="10" rx="5" fill="#fbbf24" opacity=".95">
+      <animate attributeName="width" values="245;332;245" dur="3.6s" repeatCount="indefinite" />
+    </rect>
+  </g>
+
+  <g class="spark" transform="translate(695 74)">
+    <path d="M0 -16 L5 -5 L17 0 L5 5 L0 16 L-5 5 L-17 0 L-5 -5 Z" fill="#fff7d6" />
+  </g>
+  <g class="spark two" transform="translate(1038 74)">
+    <path d="M0 -13 L4 -4 L14 0 L4 4 L0 13 L-4 4 L-14 0 L-4 -4 Z" fill="#e0fffb" />
+  </g>
+  <g class="spark three" transform="translate(1068 236)">
+    <path d="M0 -10 L3 -3 L11 0 L3 3 L0 10 L-3 3 L-11 0 L-3 -3 Z" fill="#fff7d6" />
+  </g>
+
+  <g class="float" filter="url(#shadow)">
+    <g class="tail">
+      <path d="M793 206 C725 213 708 158 748 138 C781 121 812 153 790 180" fill="none" stroke="#fff4e5" stroke-width="30" stroke-linecap="round" />
+      <path d="M793 206 C725 213 708 158 748 138" fill="none" stroke="#f4c58f" stroke-width="9" stroke-linecap="round" opacity=".45" />
+    </g>
+    <ellipse cx="875" cy="205" rx="98" ry="74" fill="#fff4e5" />
+    <ellipse cx="875" cy="218" rx="56" ry="42" fill="#fde7c4" opacity=".78" />
+    <g class="paw">
+      <ellipse cx="936" cy="220" rx="25" ry="37" fill="#fff4e5" />
+      <circle cx="927" cy="236" r="4" fill="#d89a67" opacity=".75" />
+      <circle cx="938" cy="238" r="4" fill="#d89a67" opacity=".75" />
+      <circle cx="948" cy="234" r="4" fill="#d89a67" opacity=".75" />
+    </g>
+    <circle cx="880" cy="145" r="72" fill="#fff4e5" />
+    <path d="M824 102 L845 38 L879 96 Z" fill="#fff4e5" />
+    <path d="M935 102 L917 38 L881 96 Z" fill="#fff4e5" />
+    <path d="M841 91 L849 62 L866 91 Z" fill="#f6b88c" opacity=".75" />
+    <path d="M919 91 L912 62 L895 91 Z" fill="#f6b88c" opacity=".75" />
+    <ellipse cx="856" cy="140" rx="11" ry="15" fill="#12312d">
+      <animate attributeName="ry" values="15;15;2;15;15" dur="4s" repeatCount="indefinite" />
+    </ellipse>
+    <ellipse cx="904" cy="140" rx="11" ry="15" fill="#12312d">
+      <animate attributeName="ry" values="15;15;2;15;15" dur="4s" repeatCount="indefinite" />
+    </ellipse>
+    <path d="M880 154 L870 166 L890 166 Z" fill="#d98563" />
+    <path d="M880 167 C868 179 851 177 842 168" fill="none" stroke="#12312d" stroke-width="5" stroke-linecap="round" />
+    <path d="M880 167 C892 179 909 177 918 168" fill="none" stroke="#12312d" stroke-width="5" stroke-linecap="round" />
+    <path d="M810 155 C780 145 760 145 735 151 M812 172 C780 174 760 183 738 196 M950 155 C980 145 1000 145 1025 151 M948 172 C980 174 1000 183 1022 196" stroke="#fff7ed" stroke-width="6" stroke-linecap="round" opacity=".9" />
+  </g>
+</svg>

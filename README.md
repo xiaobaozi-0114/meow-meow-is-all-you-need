@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://xiaobaozi-0114.github.io/meow-meow-is-all-you-need/">
-    <img src="https://capsule-render.vercel.app/api?type=waving&color=0:14B8A6,45:0F766E,100:F59E0B&height=260&section=header&text=Meow%20Meow&fontSize=60&fontColor=ffffff&animation=fadeIn&desc=Your%20all-in-one%20cat%20care%20guide%20%7C%20Click%20to%20open&descSize=18&descAlignY=62" alt="Meow Meow - Your all-in-one cat care guide" />
+    <img src="./public/readme-hero.svg" alt="Meow Meow - Your all-in-one cat care guide" />
   </a>
 </p>
 

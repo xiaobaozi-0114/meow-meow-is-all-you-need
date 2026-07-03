@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://xiaobaozi-0114.github.io/meow-meow-is-all-you-need/">
-    <img src="https://capsule-render.vercel.app/api?type=waving&color=0:14B8A6,45:0F766E,100:F59E0B&height=260&section=header&text=Meow%20Meow&fontSize=60&fontColor=ffffff&animation=fadeIn&desc=%E4%B8%80%E7%AB%99%E5%BC%8F%E5%85%BB%E7%8C%AB%E7%99%BE%E7%A7%91%20%7C%20%E7%82%B9%E5%87%BB%E7%AB%8B%E5%8D%B3%E6%89%93%E5%BC%80&descSize=18&descAlignY=62" alt="Meow Meow - 一站式养猫百科" />
+    <img src="./public/readme-hero-zh.svg" alt="Meow Meow - 一站式养猫百科" />
   </a>
 </p>
 
