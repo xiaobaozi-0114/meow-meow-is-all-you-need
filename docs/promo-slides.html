@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meow Meow 宣传介绍幻灯片</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
+  <style>
+    /* === THEME TOKENS === */
+    :root {
+      --stage-bg: #173f3a;
+      --slide-bg: #fff9ed;
+      --ink: #142b28;
+      --muted: #5d706d;
+      --teal: #0f766e;
+      --mint: #b9eee0;
+      --mint-soft: #e8faf4;
+      --coral: #ff7a59;
+      --orange: #f7b733;
+      --blue: #5b8def;
+      --pink: #ffb7cf;
+      --brown: #8a5b3f;
+      --cream: #fff9ed;
+      --paper: #fffdf7;
+      --line: rgba(20, 43, 40, 0.16);
+      --shadow: 0 28px 80px rgba(20, 43, 40, 0.18);
+      --font-display: "ZCOOL KuaiLe", cursive;
+      --font-body: "Noto Sans SC", sans-serif;
+      --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* === RESET === */
+    * {
+      box-sizing: border-box;
+    }
+
+    /* ===========================================
+       FIXED 16:9 STAGE: MANDATORY BASE STYLES
+       Include this ENTIRE file in every presentation.
+       Slides are authored at 1920×1080 and scaled as a whole.
+       =========================================== */
+
+    /* 1. Lock the browser viewport */
+    html,
+    body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+        background: var(--stage-bg, #000);
+    }
+
+    /* 2. Full-window deck viewport */
+    .deck-viewport {
+        position: fixed;
+        inset: 0;
+        overflow: hidden;
+        background: var(--stage-bg, #000);
+    }
+
+    /* 3. Fixed 16:9 design canvas.
+       JavaScript sets transform: translate(...) scale(...). */
+    .deck-stage {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        transform-origin: 0 0;
+        background: var(--slide-bg, #fff);
+    }
+
+    /* 4. Slides stack inside the fixed stage.
+       Content must be laid out at 1920×1080, not reflowed per device. */
+    .slide {
+        position: absolute;
+        inset: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        display: block;
+        visibility: hidden;
+        opacity: 0;
+        pointer-events: none;
+        background: var(--slide-bg, #fff);
+    }
+
+    .slide.active,
+    .slide.visible {
+        visibility: visible;
+        opacity: 1;
+        pointer-events: auto;
+        z-index: 1;
+    }
+
+    /* 5. Keep media inside authored slide bounds */
+    img,
+    video,
+    canvas,
+    svg {
+        max-width: 100%;
+        max-height: 100%;
+    }
+
+    /* 6. Presentation chrome stays outside the slide design system */
+    .deck-controls {
+        position: fixed;
+        left: 50%;
+        bottom: 22px;
+        transform: translateX(-50%);
+        z-index: 1000;
+    }
+
+    /* 7. Print one fixed-size slide per page */
+    @media print {
+        html,
+        body {
+            width: 1920px;
+            height: auto;
+            overflow: visible;
+            background: #fff;
+        }
+
+        .deck-viewport {
+            position: static;
+            overflow: visible;
+            background: #fff;
+        }
+
+        .deck-stage {
+            position: static;
+            width: auto;
+            height: auto;
+            transform: none !important;
+            background: none;
+        }
+
+        .slide {
+            position: relative;
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            pointer-events: auto !important;
+            width: 1920px;
+            height: 1080px;
+            break-after: page;
+            page-break-after: always;
+        }
+
+        .slide:last-child {
+            break-after: auto;
+            page-break-after: auto;
+        }
+
+        .deck-controls {
+            display: none !important;
+        }
+    }
+
+    /* 8. Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+            animation-duration: 0.01ms !important;
+            transition-duration: 0.2s !important;
+        }
+    }
+
+    /* === GLOBAL SLIDE SYSTEM === */
+    body {
+      color: var(--ink);
+      font-family: var(--font-body);
+    }
+
+    .slide {
+      padding: 76px;
+      background:
+        radial-gradient(circle at 12% 12%, rgba(185, 238, 224, 0.62), transparent 26%),
+        radial-gradient(circle at 92% 18%, rgba(255, 183, 207, 0.46), transparent 27%),
+        radial-gradient(circle at 78% 92%, rgba(247, 183, 51, 0.26), transparent 25%),
+        var(--cream);
+    }
+
+    .slide::before {
+      content: "";
+      position: absolute;
+      inset: 34px;
+      border: 2px solid rgba(20, 43, 40, 0.12);
+      border-radius: 42px;
+      pointer-events: none;
+    }
+
+    .slide::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: 0.18;
+      background-image:
+        linear-gradient(90deg, rgba(20, 43, 40, 0.05) 1px, transparent 1px),
+        linear-gradient(rgba(20, 43, 40, 0.05) 1px, transparent 1px);
+      background-size: 84px 84px;
+      mask-image: radial-gradient(circle at 50% 50%, black, transparent 72%);
+      pointer-events: none;
+    }
+
+    .brand-pill {
+      position: absolute;
+      left: 96px;
+      top: 86px;
+      z-index: 3;
+      display: inline-flex;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 24px;
+      border: 2px solid var(--line);
+      border-radius: 999px;
+      color: var(--teal);
+      background: rgba(255, 253, 247, 0.82);
+      box-shadow: 0 14px 34px rgba(20, 43, 40, 0.08);
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: 0.02em;
+    }
+
+    .brand-face {
+      position: relative;
+      width: 42px;
+      height: 34px;
+      border: 4px solid currentColor;
+      border-radius: 16px 16px 18px 18px;
+    }
+
+    .brand-face::before,
+    .brand-face::after {
+      content: "";
+      position: absolute;
+      top: -13px;
+      width: 16px;
+      height: 16px;
+      border-top: 4px solid currentColor;
+      border-left: 4px solid currentColor;
+      background: var(--paper);
+      transform: rotate(45deg);
+    }
+
+    .brand-face::before { left: 2px; }
+    .brand-face::after { right: 2px; }
+
+    .slide-number {
+      position: absolute;
+      right: 98px;
+      top: 88px;
+      z-index: 3;
+      color: rgba(20, 43, 40, 0.46);
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: 0.16em;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1,
+    h2 {
+      letter-spacing: 0;
+      line-height: 0.98;
+    }
+
+    .kicker {
+      color: var(--teal);
+      font-size: 26px;
+      font-weight: 900;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .headline {
+      font-family: var(--font-display);
+      font-size: 132px;
+      font-weight: 400;
+      color: var(--ink);
+    }
+
+    .headline.compact {
+      font-size: 108px;
+    }
+
+    .lead {
+      color: var(--muted);
+      font-size: 38px;
+      font-weight: 500;
+      line-height: 1.55;
+    }
+
+    .strong {
+      color: var(--teal);
+      font-weight: 900;
+    }
+
+    .slide-grid {
+      position: relative;
+      z-index: 2;
+      height: 100%;
+      display: grid;
+      gap: 44px;
+    }
+
+    .two-col {
+      grid-template-columns: 1.05fr 0.95fr;
+      align-items: center;
+    }
+
+    .panel {
+      border: 2px solid var(--line);
+      border-radius: 34px;
+      background: rgba(255, 253, 247, 0.78);
+      box-shadow: var(--shadow);
+    }
+
+    .soft-panel {
+      padding: 44px;
+      border: 2px solid rgba(15, 118, 110, 0.22);
+      border-radius: 34px;
+      background: rgba(232, 250, 244, 0.75);
+    }
+
+    .sticker {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 54px;
+      padding: 0 24px;
+      border: 2px solid rgba(20, 43, 40, 0.1);
+      border-radius: 999px;
+      color: var(--ink);
+      background: var(--mint);
+      font-size: 24px;
+      font-weight: 900;
+      box-shadow: 0 10px 0 rgba(20, 43, 40, 0.08);
+    }
+
+    .sticker.coral { background: #ffd2c6; }
+    .sticker.blue { background: #dbe8ff; }
+    .sticker.orange { background: #ffe5a6; }
+    .sticker.pink { background: #ffe0ec; }
+
+    /* === ANIMATION SYSTEM === */
+    .reveal,
+    .reveal-left,
+    .reveal-scale,
+    .reveal-blur {
+      opacity: 0;
+      transition:
+        opacity 0.72s var(--ease-out-expo),
+        transform 0.72s var(--ease-out-expo),
+        filter 0.72s var(--ease-out-expo);
+    }
+
+    .reveal { transform: translateY(36px); }
+    .reveal-left { transform: translateX(-48px); }
+    .reveal-scale { transform: scale(0.92); }
+    .reveal-blur {
+      filter: blur(10px);
+      transform: translateY(24px);
+    }
+
+    .visible .reveal,
+    .visible .reveal-left,
+    .visible .reveal-scale,
+    .visible .reveal-blur {
+      opacity: 1;
+      filter: blur(0);
+      transform: translate(0, 0) scale(1);
+    }
+
+    .delay-1 { transition-delay: 0.1s; }
+    .delay-2 { transition-delay: 0.2s; }
+    .delay-3 { transition-delay: 0.3s; }
+    .delay-4 { transition-delay: 0.4s; }
+    .delay-5 { transition-delay: 0.5s; }
+
+    @keyframes floaty {
+      0%, 100% { transform: translateY(0) rotate(-2deg); }
+      50% { transform: translateY(-18px) rotate(2deg); }
+    }
+
+    @keyframes tailWave {
+      0%, 100% { transform: rotate(16deg); }
+      50% { transform: rotate(42deg); }
+    }
+
+    @keyframes pawWalk {
+      0% { transform: translateX(-120px); opacity: 0; }
+      10%, 88% { opacity: 1; }
+      100% { transform: translateX(360px); opacity: 0; }
+    }
+
+    /* === CSS CAT MASCOT === */
+    .cat-mascot {
+      position: relative;
+      width: 560px;
+      height: 430px;
+      margin: 0 auto;
+      animation: floaty 5s ease-in-out infinite;
+    }
+
+    .cat-body {
+      position: absolute;
+      left: 112px;
+      top: 142px;
+      width: 330px;
+      height: 210px;
+      border: 5px solid var(--ink);
+      border-radius: 52% 48% 46% 54%;
+      background: linear-gradient(135deg, #f6cbaa 0%, #fff1da 60%, #d6efe7 100%);
+      box-shadow: 18px 20px 0 rgba(15, 118, 110, 0.18);
+    }
+
+    .cat-head {
+      position: absolute;
+      left: 178px;
+      top: 46px;
+      width: 210px;
+      height: 190px;
+      border: 5px solid var(--ink);
+      border-radius: 44% 44% 48% 48%;
+      background: #fff3df;
+      z-index: 2;
+    }
+
+    .cat-head::before,
+    .cat-head::after {
+      content: "";
+      position: absolute;
+      top: -42px;
+      width: 82px;
+      height: 82px;
+      border-top: 5px solid var(--ink);
+      border-left: 5px solid var(--ink);
+      background: #fff3df;
+      transform: rotate(45deg);
+      border-radius: 14px;
+    }
+
+    .cat-head::before { left: 8px; }
+    .cat-head::after { right: 8px; }
+
+    .cat-eye {
+      position: absolute;
+      top: 78px;
+      width: 21px;
+      height: 30px;
+      border-radius: 50%;
+      background: var(--ink);
+    }
+
+    .cat-eye.left { left: 64px; }
+    .cat-eye.right { right: 64px; }
+
+    .cat-nose {
+      position: absolute;
+      left: 95px;
+      top: 112px;
+      width: 20px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--coral);
+    }
+
+    .cat-tail {
+      position: absolute;
+      right: 58px;
+      top: 168px;
+      width: 128px;
+      height: 44px;
+      border: 5px solid var(--ink);
+      border-left: 0;
+      border-radius: 0 80px 80px 0;
+      transform-origin: left center;
+      animation: tailWave 2.4s ease-in-out infinite;
+      background: #fff3df;
+    }
+
+    .pawprint {
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: rgba(15, 118, 110, 0.2);
+      animation: pawWalk 7s linear infinite;
+    }
+
+    .pawprint::before,
+    .pawprint::after {
+      content: "";
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(15, 118, 110, 0.2);
+      top: -8px;
+    }
+
+    .pawprint::before { left: -4px; }
+    .pawprint::after { right: -4px; }
+
+    .paw-1 { left: 1040px; top: 780px; animation-delay: 0s; }
+    .paw-2 { left: 1110px; top: 838px; animation-delay: 0.9s; }
+    .paw-3 { left: 1180px; top: 780px; animation-delay: 1.8s; }
+
+    /* === TITLE SLIDE === */
+    .title-layout {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 1fr 620px;
+      align-items: center;
+      height: 100%;
+      gap: 60px;
+      padding: 70px 40px 30px 40px;
+    }
+
+    .title-title {
+      font-family: var(--font-display);
+      font-size: 178px;
+      line-height: 0.9;
+      color: var(--ink);
+    }
+
+    .title-title span {
+      color: var(--teal);
+    }
+
+    .title-subtitle {
+      margin-top: 36px;
+      max-width: 960px;
+      color: var(--muted);
+      font-size: 42px;
+      line-height: 1.5;
+      font-weight: 700;
+    }
+
+    .site-tag {
+      display: inline-flex;
+      margin-top: 42px;
+      padding: 18px 28px;
+      border: 3px solid var(--ink);
+      border-radius: 18px;
+      color: var(--paper);
+      background: var(--teal);
+      font-size: 28px;
+      font-weight: 900;
+      box-shadow: 10px 10px 0 var(--orange);
+    }
+
+    /* === PROBLEM SLIDE === */
+    .pain-grid {
+      grid-template-columns: 0.9fr 1.1fr;
+      align-items: center;
+      padding: 118px 36px 40px;
+    }
+
+    .messy-wall {
+      position: relative;
+      height: 720px;
+    }
+
+    .note {
+      position: absolute;
+      width: 380px;
+      min-height: 150px;
+      padding: 26px;
+      border: 3px solid var(--ink);
+      border-radius: 22px;
+      background: var(--paper);
+      box-shadow: 12px 14px 0 rgba(20, 43, 40, 0.12);
+      font-size: 30px;
+      font-weight: 900;
+      line-height: 1.35;
+    }
+
+    .note small {
+      display: block;
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 21px;
+      font-weight: 700;
+    }
+
+    .note:nth-child(1) { left: 20px; top: 30px; transform: rotate(-8deg); background: #fff2b7; }
+    .note:nth-child(2) { left: 260px; top: 160px; transform: rotate(7deg); background: #dff7ee; }
+    .note:nth-child(3) { left: 80px; top: 350px; transform: rotate(4deg); background: #ffe0ec; }
+    .note:nth-child(4) { left: 340px; top: 500px; transform: rotate(-5deg); background: #dde9ff; }
+
+    /* === SOLUTION SLIDE === */
+    .hub-map {
+      position: relative;
+      width: 940px;
+      height: 720px;
+      margin: 0 auto;
+    }
+
+    .hub-center {
+      position: absolute;
+      left: 295px;
+      top: 235px;
+      width: 350px;
+      height: 250px;
+      display: grid;
+      place-items: center;
+      border: 5px solid var(--ink);
+      border-radius: 42px;
+      color: var(--paper);
+      background: var(--teal);
+      box-shadow: 18px 18px 0 var(--orange);
+      font-family: var(--font-display);
+      font-size: 72px;
+      text-align: center;
+      line-height: 0.95;
+    }
+
+    .hub-node {
+      position: absolute;
+      width: 260px;
+      padding: 24px;
+      border: 3px solid var(--ink);
+      border-radius: 24px;
+      background: var(--paper);
+      box-shadow: 10px 12px 0 rgba(20, 43, 40, 0.1);
+      font-size: 28px;
+      font-weight: 900;
+      text-align: center;
+    }
+
+    .hub-node:nth-child(2) { left: 0; top: 30px; background: #dff7ee; }
+    .hub-node:nth-child(3) { right: 0; top: 30px; background: #ffe0ec; }
+    .hub-node:nth-child(4) { left: 0; bottom: 44px; background: #dde9ff; }
+    .hub-node:nth-child(5) { right: 0; bottom: 44px; background: #fff2b7; }
+    .hub-node:nth-child(6) { left: 340px; bottom: 0; background: #ffd8c9; }
+
+    /* === FEATURE CARDS === */
+    .feature-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+      margin-top: 54px;
+    }
+
+    .feature-card {
+      min-height: 420px;
+      padding: 34px;
+      border: 3px solid var(--ink);
+      border-radius: 32px;
+      background: var(--paper);
+      box-shadow: 14px 16px 0 rgba(20, 43, 40, 0.12);
+    }
+
+    .feature-card h3 {
+      margin-top: 24px;
+      color: var(--ink);
+      font-size: 46px;
+      line-height: 1.08;
+    }
+
+    .feature-card p {
+      margin-top: 22px;
+      color: var(--muted);
+      font-size: 28px;
+      line-height: 1.5;
+      font-weight: 600;
+    }
+
+    .feature-icon {
+      width: 88px;
+      height: 88px;
+      display: grid;
+      place-items: center;
+      border-radius: 28px;
+      color: var(--paper);
+      background: var(--teal);
+      font-size: 42px;
+      font-weight: 900;
+      box-shadow: 8px 8px 0 var(--orange);
+    }
+
+    /* === PATH SLIDE === */
+    .path {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 22px;
+      margin-top: 70px;
+    }
+
+    .path-step {
+      position: relative;
+      min-height: 490px;
+      padding: 30px 26px;
+      border: 3px solid var(--ink);
+      border-radius: 999px 999px 38px 38px;
+      background: var(--paper);
+      box-shadow: 10px 14px 0 rgba(20, 43, 40, 0.12);
+      text-align: center;
+    }
+
+    .path-step .num {
+      width: 84px;
+      height: 84px;
+      display: grid;
+      place-items: center;
+      margin: 0 auto 36px;
+      border-radius: 50%;
+      color: var(--paper);
+      background: var(--teal);
+      font-size: 34px;
+      font-weight: 900;
+    }
+
+    .path-step h3 {
+      font-size: 38px;
+      line-height: 1.15;
+    }
+
+    .path-step p {
+      margin-top: 24px;
+      color: var(--muted);
+      font-size: 25px;
+      line-height: 1.48;
+      font-weight: 600;
+    }
+
+    /* === COMPARISON SLIDE === */
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 34px;
+      margin-top: 54px;
+    }
+
+    .compare-card {
+      min-height: 540px;
+      padding: 44px;
+      border: 3px solid var(--ink);
+      border-radius: 34px;
+      background: var(--paper);
+      box-shadow: 14px 16px 0 rgba(20, 43, 40, 0.11);
+    }
+
+    .compare-card h3 {
+      font-size: 52px;
+    }
+
+    .compare-card ul {
+      display: grid;
+      gap: 22px;
+      margin: 36px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .compare-card li {
+      display: flex;
+      gap: 18px;
+      color: var(--muted);
+      font-size: 30px;
+      line-height: 1.45;
+      font-weight: 700;
+    }
+
+    .compare-card li::before {
+      content: "";
+      flex: 0 0 18px;
+      width: 18px;
+      height: 18px;
+      margin-top: 13px;
+      border-radius: 50%;
+      background: var(--coral);
+    }
+
+    .compare-card.good li::before {
+      background: var(--teal);
+    }
+
+    /* === AI SLIDE === */
+    .chat-stack {
+      display: grid;
+      gap: 24px;
+      padding: 40px;
+      border-radius: 42px;
+      background: rgba(255, 253, 247, 0.82);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow);
+    }
+
+    .bubble {
+      max-width: 760px;
+      padding: 26px 30px;
+      border: 3px solid var(--ink);
+      border-radius: 28px;
+      background: #dff7ee;
+      font-size: 30px;
+      line-height: 1.42;
+      font-weight: 800;
+      box-shadow: 8px 8px 0 rgba(20, 43, 40, 0.1);
+    }
+
+    .bubble.answer {
+      justify-self: end;
+      background: #fff2b7;
+    }
+
+    /* === CLOSING SLIDE === */
+    .closing-card {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      align-items: center;
+      height: 100%;
+      gap: 56px;
+      padding: 96px 58px 34px;
+    }
+
+    .url-card {
+      padding: 44px;
+      border: 4px solid var(--ink);
+      border-radius: 34px;
+      background: var(--paper);
+      box-shadow: 18px 18px 0 var(--orange);
+    }
+
+    .url-card p {
+      color: var(--muted);
+      font-size: 31px;
+      line-height: 1.5;
+      font-weight: 700;
+    }
+
+    .url {
+      margin-top: 22px;
+      color: var(--teal);
+      font-size: 33px;
+      font-weight: 900;
+      word-break: break-all;
+    }
+
+    /* === OUTSIDE CONTROLS === */
+    .deck-controls {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 16px;
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      border-radius: 999px;
+      color: #ecfffa;
+      background: rgba(20, 43, 40, 0.78);
+      backdrop-filter: blur(14px);
+      font: 700 14px var(--font-body);
+    }
+
+    .deck-controls button,
+    .edit-toggle,
+    .save-button {
+      border: 0;
+      color: #ecfffa;
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 999px;
+      cursor: pointer;
+      font: 900 14px var(--font-body);
+    }
+
+    .deck-controls button {
+      width: 36px;
+      height: 32px;
+    }
+
+    .progress-track {
+      width: 210px;
+      height: 8px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.18);
+    }
+
+    .progress-fill {
+      width: 0%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--mint), var(--orange));
+      transition: width 0.35s var(--ease-out-expo);
+    }
+
+    /* === EDITING CONTROLS === */
+    .edit-hotzone {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 86px;
+      height: 86px;
+      z-index: 10000;
+      cursor: pointer;
+    }
+
+    .edit-toggle,
+    .save-button {
+      position: fixed;
+      left: 22px;
+      z-index: 10001;
+      width: 46px;
+      height: 46px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      background: rgba(15, 118, 110, 0.92);
+    }
+
+    .edit-toggle { top: 20px; }
+    .save-button { top: 76px; }
+
+    .edit-toggle.show,
+    .edit-toggle.active,
+    .save-button.show,
+    .save-button.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .editing [contenteditable="true"] {
+      outline: 3px dashed rgba(255, 122, 89, 0.7);
+      outline-offset: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="deck-viewport">
+    <main class="deck-stage" id="deckStage">
+      <section class="slide active">
+        <div class="brand-pill reveal"><span class="brand-face"></span>Meow Meow</div>
+        <div class="slide-number">01 / 10</div>
+        <div class="title-layout">
+          <div>
+            <div class="kicker reveal-left delay-1" contenteditable="false">中国养猫家庭的一站式入口</div>
+            <h1 class="title-title reveal-blur delay-2" data-editable>Meow<br><span>Meow</span></h1>
+            <p class="title-subtitle reveal delay-3" data-editable>从选猫、接猫、喂养、用品参考到异常分诊，把散落在各处的养猫问题收拢到一个页面。</p>
+            <div class="site-tag reveal-scale delay-4" data-editable>meow-meow is all you need</div>
+          </div>
+          <div class="cat-mascot reveal-scale delay-3" aria-hidden="true">
+            <div class="cat-tail"></div>
+            <div class="cat-body"></div>
+            <div class="cat-head">
+              <div class="cat-eye left"></div>
+              <div class="cat-eye right"></div>
+              <div class="cat-nose"></div>
+            </div>
+          </div>
+        </div>
+        <span class="pawprint paw-1"></span>
+        <span class="pawprint paw-2"></span>
+        <span class="pawprint paw-3"></span>
+      </section>
+
+      <section class="slide">
+        <div class="brand-pill"><span class="brand-face"></span>Meow Meow</div>
+        <div class="slide-number">02 / 10</div>
+        <div class="slide-grid pain-grid">
+          <div class="messy-wall reveal-left">
+            <div class="note">品种怎么选？<small>英短、布偶、狸花、银渐层到底差在哪</small></div>
+            <div class="note">新手先买啥？<small>猫砂盆、猫粮、饮水机、封窗</small></div>
+            <div class="note">软便怎么办？<small>观察多久？什么时候要去医院</small></div>
+            <div class="note">猫粮怎么比？<small>品牌、价格、口碑、注意事项</small></div>
+          </div>
+          <div>
+            <div class="kicker reveal delay-1">信息痛点</div>
+            <h2 class="headline compact reveal delay-2" data-editable>养猫信息太碎，新手容易被淹没</h2>
+            <p class="lead reveal delay-3" data-editable>社媒经验、搜索结果、商品评价和医院建议分散在不同平台。真正需要的是一个能按场景组织、随时可查、可继续追问的养猫入口。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="brand-pill"><span class="brand-face"></span>Meow Meow</div>
+        <div class="slide-number">03 / 10</div>
+        <div class="slide-grid two-col">
+          <div>
+            <div class="kicker reveal delay-1">解决方案</div>
+            <h2 class="headline compact reveal delay-2" data-editable>把养猫问题做成一张清晰地图</h2>
+            <p class="lead reveal delay-3" data-editable>首页直接进入内容：查品种、看教程、找用品、做分诊、问助手。每个模块都围绕真实养猫动作设计。</p>
+          </div>
+          <div class="hub-map reveal-scale delay-3">
+            <div class="hub-center">Meow<br>Meow</div>
+            <div class="hub-node">品种大全</div>
+            <div class="hub-node">新手教程</div>
+            <div class="hub-node">用品汇总</div>
+            <div class="hub-node">生病自救</div>
+            <div class="hub-node">智能助手</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="brand-pill"><span class="brand-face"></span>Meow Meow</div>
+        <div class="slide-number">04 / 10</div>
+        <div style="position:relative;z-index:2;padding:126px 34px 0;">
+          <div class="kicker reveal">核心功能</div>
+          <h2 class="headline compact reveal delay-1" data-editable>用户最常打开的 3 个入口</h2>
+          <div class="feature-row">
+            <article class="feature-card reveal delay-2">
+              <div class="feature-icon">01</div>
+              <h3 data-editable>品种资料</h3>
+              <p data-editable>优先覆盖中国用户常见猫咪，展示外观、性格、毛长、体型、养护难度和健康关注点。</p>
+            </article>
+            <article class="feature-card reveal delay-3" style="background:#fff2b7;">
+              <div class="feature-icon" style="background:var(--coral);">02</div>
+              <h3 data-editable>新手教程</h3>
+              <p data-editable>从接猫前准备到疫苗驱虫、换粮、绝育、封窗和日常护理，按步骤上手。</p>
+            </article>
+            <article class="feature-card reveal delay-4" style="background:#dbe8ff;">
+              <div class="feature-icon" style="background:var(--blue);">03</div>
+              <h3 data-editable>异常分诊</h3>
+              <p data-editable>把软便、尿闭、呕吐、猫鼻支等场景拆成症状识别、居家处理和就医提示。</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="brand-pill"><span class="brand-face"></span>Meow Meow</div>
+        <div class="slide-number">05 / 10</div>
+        <div style="position:relative;z-index:2;padding:126px 34px 0;">
+          <div class="kicker reveal">新手路径</div>
+          <h2 class="headline compact reveal delay-1" data-editable>从“想养猫”到“会养猫”</h2>
+          <div class="path">
+            <div class="path-step reveal delay-1"><div class="num">1</div><h3>先了解品种</h3><p>对比性格、毛长、体型、掉毛和养护难度。</p></div>
+            <div class="path-step reveal delay-2"><div class="num">2</div><h3>准备用品</h3><p>猫砂盆、主粮、水碗、封窗和安静房间先到位。</p></div>
+            <div class="path-step reveal delay-3"><div class="num">3</div><h3>到家适应</h3><p>减少打扰，观察吃喝、排便、精神和应激。</p></div>
+            <div class="path-step reveal delay-4"><div class="num">4</div><h3>健康节奏</h3><p>体检、疫苗、驱虫、绝育和日常记录。</p></div>
+            <div class="path-step reveal delay-5"><div class="num">5</div><h3>长期升级</h3><p>饮食、互动、清洁、行为和用品持续优化。</p></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="brand-pill"><span class="brand-face"></span>Meow Meow</div>
+        <div class="slide-number">06 / 10</div>
+        <div class="slide-grid two-col">
+          <div>
+            <div class="kicker reveal">猫咪用品</div>
+            <h2 class="headline compact reveal delay-1" data-editable>不做“买它”，只做清楚的参考</h2>
+            <p class="lead reveal delay-2" data-editable>猫粮、猫罐头、猫条、日常保健品、猫砂、饮水机、猫窝和玩具，都按品牌信息、价格区间、网络高频评价、优缺点和注意事项整理。</p>
+          </div>
+          <div class="comparison reveal-scale delay-2">
+            <div class="compare-card">
+              <h3>传统热榜</h3>
+              <ul>
+                <li>容易像广告或带货结论</li>
+                <li>不同预算用户难以参考</li>
+                <li>争议品牌容易引发误解</li>
+                <li>忽略猫咪个体差异</li>
+              </ul>
+            </div>
+            <div class="compare-card good" style="background:#dff7ee;">
+              <h3>用品汇总</h3>
+              <ul>
+                <li>品牌信息拆开看</li>
+                <li>价格和适用场景分层</li>
+                <li>优缺点并列呈现</li>
+                <li>提醒试吃、看配方和就医边界</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="brand-pill"><span class="brand-face"></span>Meow Meow</div>
+        <div class="slide-number">07 / 10</div>
+        <div class="slide-grid two-col">
+          <div>
+            <div class="kicker reveal">智能养猫助手</div>
+            <h2 class="headline compact reveal delay-1" data-editable>网页没写到的问题，继续问</h2>
+            <p class="lead reveal delay-2" data-editable>用户可以把猫咪年龄、症状、吃喝排便、已做处理说清楚，快速获得下一步建议。急症、用药和剂量问题始终提示咨询兽医。</p>
+          </div>
+          <div class="chat-stack reveal-scale delay-2">
+            <div class="bubble">小猫软便但精神正常，先观察什么？</div>
+            <div class="bubble answer">先记录频次、便便形态、食欲和饮水，暂停新零食；若血便、频繁腹泻、精神差或幼猫脱水，尽快就医。</div>
+            <div class="bubble">换粮怎么做不容易翻车？</div>
+            <div class="bubble answer">建议 7-10 天逐步过渡，少量多次观察软便、呕吐和食欲变化。</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="brand-pill"><span class="brand-face"></span>Meow Meow</div>
+        <div class="slide-number">08 / 10</div>
+        <div style="position:relative;z-index:2;padding:126px 34px 0;">
+          <div class="kicker reveal">用户价值</div>
+          <h2 class="headline compact reveal delay-1" data-editable>适合被收藏、转发、反复打开</h2>
+          <div class="feature-row">
+            <article class="feature-card reveal delay-2" style="background:#dff7ee;"><div class="sticker">准备养猫</div><h3>降低入门焦虑</h3><p>用品、环境、接猫流程和健康计划先看明白。</p></article>
+            <article class="feature-card reveal delay-3" style="background:#ffe0ec;"><div class="sticker pink">正在养猫</div><h3>快速查小问题</h3><p>换粮、软便、猫砂、掉毛、互动和护理随手查。</p></article>
+            <article class="feature-card reveal delay-4" style="background:#fff2b7;"><div class="sticker orange">突然不对劲</div><h3>判断轻重缓急</h3><p>先识别危险信号，避免该急诊时继续等。</p></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="brand-pill"><span class="brand-face"></span>Meow Meow</div>
+        <div class="slide-number">09 / 10</div>
+        <div class="slide-grid two-col">
+          <div>
+            <div class="kicker reveal">传播卖点</div>
+            <h2 class="headline compact reveal delay-1" data-editable>一句话介绍它</h2>
+            <p class="lead reveal delay-2" data-editable>Meow Meow 是面向中国养猫家庭的一站式养猫百科：查品种、学新手教程、看用品参考、做异常分诊，还能直接问智能养猫助手。</p>
+          </div>
+          <div class="soft-panel reveal-scale delay-2">
+            <div class="sticker coral">适合小红书 / 社群 / 朋友圈</div>
+            <h3 style="margin-top:38px;font-size:74px;line-height:1.08;" data-editable>养猫资料不用东翻西找，这一个页面就够了。</h3>
+            <p style="margin-top:36px;color:var(--muted);font-size:32px;line-height:1.5;font-weight:700;" data-editable>收藏给准备养猫和刚接猫的新手，也适合老铲屎官当速查工具。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="brand-pill"><span class="brand-face"></span>Meow Meow</div>
+        <div class="slide-number">10 / 10</div>
+        <div class="closing-card">
+          <div>
+            <div class="kicker reveal">开始使用</div>
+            <h2 class="headline reveal delay-1" data-editable>打开 Meow Meow</h2>
+            <p class="lead reveal delay-2" data-editable>把它当作养猫路上的随身小百科。遇到不确定的问题，先查资料；涉及急症、诊断、药物和剂量，直接咨询兽医。</p>
+          </div>
+          <div class="url-card reveal-scale delay-2">
+            <p>网页入口</p>
+            <div class="url">https://xiaobaozi-0114.github.io/meow-meow-is-all-you-need/</div>
+            <div style="display:flex;gap:16px;margin-top:34px;flex-wrap:wrap;">
+              <span class="sticker">品种</span>
+              <span class="sticker blue">教程</span>
+              <span class="sticker orange">用品</span>
+              <span class="sticker coral">AI</span>
+              <span class="sticker pink">分诊</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="deck-controls" aria-label="幻灯片控制">
+    <button type="button" id="prevBtn" aria-label="上一页">‹</button>
+    <span id="slideCounter">1 / 10</span>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <button type="button" id="nextBtn" aria-label="下一页">›</button>
+  </div>
+
+  <div class="edit-hotzone" title="编辑模式"></div>
+  <button class="edit-toggle" id="editToggle" type="button" title="编辑模式 E">E</button>
+  <button class="save-button" id="saveButton" type="button" title="下载当前 HTML">S</button>
+
+  <script>
+    /* === SLIDE PRESENTATION CONTROLLER === */
+    class SlidePresentation {
+      constructor() {
+        this.slides = Array.from(document.querySelectorAll(".slide"));
+        this.currentSlide = 0;
+        this.stage = document.getElementById("deckStage");
+        this.counter = document.getElementById("slideCounter");
+        this.progress = document.getElementById("progressFill");
+        this.wheelLocked = false;
+        this.setupStageScale();
+        this.setupKeyboardNav();
+        this.setupTouchNav();
+        this.setupWheelNav();
+        this.setupButtons();
+        this.showSlide(0);
+      }
+
+      setupStageScale() {
+        const scale = () => {
+          const factor = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+          const x = (window.innerWidth - 1920 * factor) / 2;
+          const y = (window.innerHeight - 1080 * factor) / 2;
+          this.stage.style.transform = `translate(${x}px, ${y}px) scale(${factor})`;
+        };
+        scale();
+        window.addEventListener("resize", scale);
+      }
+
+      setupKeyboardNav() {
+        document.addEventListener("keydown", (event) => {
+          if (event.target && event.target.getAttribute("contenteditable") === "true") return;
+          const nextKeys = ["ArrowRight", "ArrowDown", " ", "PageDown"];
+          const prevKeys = ["ArrowLeft", "ArrowUp", "PageUp"];
+          if (nextKeys.includes(event.key)) {
+            event.preventDefault();
+            this.next();
+          }
+          if (prevKeys.includes(event.key)) {
+            event.preventDefault();
+            this.prev();
+          }
+        });
+      }
+
+      setupTouchNav() {
+        let startX = 0;
+        let startY = 0;
+        document.addEventListener("touchstart", (event) => {
+          startX = event.touches[0].clientX;
+          startY = event.touches[0].clientY;
+        }, { passive: true });
+        document.addEventListener("touchend", (event) => {
+          const dx = event.changedTouches[0].clientX - startX;
+          const dy = event.changedTouches[0].clientY - startY;
+          if (Math.abs(dx) > 70 && Math.abs(dx) > Math.abs(dy)) {
+            dx < 0 ? this.next() : this.prev();
+          }
+        }, { passive: true });
+      }
+
+      setupWheelNav() {
+        document.addEventListener("wheel", (event) => {
+          if (this.wheelLocked || Math.abs(event.deltaY) < 28) return;
+          this.wheelLocked = true;
+          event.deltaY > 0 ? this.next() : this.prev();
+          window.setTimeout(() => {
+            this.wheelLocked = false;
+          }, 520);
+        }, { passive: true });
+      }
+
+      setupButtons() {
+        document.getElementById("nextBtn").addEventListener("click", () => this.next());
+        document.getElementById("prevBtn").addEventListener("click", () => this.prev());
+      }
+
+      showSlide(index) {
+        this.currentSlide = Math.max(0, Math.min(index, this.slides.length - 1));
+        this.slides.forEach((slide, slideIndex) => {
+          const active = slideIndex === this.currentSlide;
+          slide.classList.toggle("active", active);
+          slide.classList.toggle("visible", active);
+        });
+        this.counter.textContent = `${this.currentSlide + 1} / ${this.slides.length}`;
+        this.progress.style.width = `${((this.currentSlide + 1) / this.slides.length) * 100}%`;
+      }
+
+      next() {
+        this.showSlide(this.currentSlide + 1);
+      }
+
+      prev() {
+        this.showSlide(this.currentSlide - 1);
+      }
+    }
+
+    /* === INLINE EDITOR === */
+    class InlineEditor {
+      constructor() {
+        this.isActive = false;
+        this.editables = Array.from(document.querySelectorAll("[data-editable]"));
+        this.storageKey = "meow-meow-promo-slides-edits";
+        this.load();
+      }
+
+      toggleEditMode() {
+        this.isActive = !this.isActive;
+        document.body.classList.toggle("editing", this.isActive);
+        document.getElementById("editToggle").classList.toggle("active", this.isActive);
+        document.getElementById("saveButton").classList.toggle("active", this.isActive);
+        this.editables.forEach((element) => {
+          element.setAttribute("contenteditable", String(this.isActive));
+        });
+        if (!this.isActive) this.save();
+      }
+
+      save() {
+        const data = this.editables.map((element) => element.innerHTML);
+        localStorage.setItem(this.storageKey, JSON.stringify(data));
+      }
+
+      load() {
+        try {
+          const data = JSON.parse(localStorage.getItem(this.storageKey) || "[]");
+          data.forEach((html, index) => {
+            if (this.editables[index]) this.editables[index].innerHTML = html;
+          });
+        } catch (error) {
+          localStorage.removeItem(this.storageKey);
+        }
+      }
+    }
+
+    /* === DOWNLOAD CURRENT FILE === */
+    function downloadCurrentHtml() {
+      const source = "<!DOCTYPE html>\\n" + document.documentElement.outerHTML;
+      const blob = new Blob([source], { type: "text/html;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "meow-meow-promo-slides.html";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    const deck = new SlidePresentation();
+    const editor = new InlineEditor();
+
+    /* === EDIT CONTROL VISIBILITY === */
+    const hotzone = document.querySelector(".edit-hotzone");
+    const editToggle = document.getElementById("editToggle");
+    const saveButton = document.getElementById("saveButton");
+    let hideTimeout = null;
+    const showEditorControls = () => {
+      clearTimeout(hideTimeout);
+      editToggle.classList.add("show");
+      saveButton.classList.add("show");
+    };
+    const hideEditorControls = () => {
+      hideTimeout = setTimeout(() => {
+        if (!editor.isActive) {
+          editToggle.classList.remove("show");
+          saveButton.classList.remove("show");
+        }
+      }, 400);
+    };
+
+    hotzone.addEventListener("mouseenter", showEditorControls);
+    hotzone.addEventListener("mouseleave", hideEditorControls);
+    hotzone.addEventListener("click", () => editor.toggleEditMode());
+    editToggle.addEventListener("mouseenter", showEditorControls);
+    editToggle.addEventListener("mouseleave", hideEditorControls);
+    saveButton.addEventListener("mouseenter", showEditorControls);
+    saveButton.addEventListener("mouseleave", hideEditorControls);
+    editToggle.addEventListener("click", () => editor.toggleEditMode());
+    saveButton.addEventListener("click", downloadCurrentHtml);
+
+    document.addEventListener("keydown", (event) => {
+      if (event.target && event.target.getAttribute("contenteditable") === "true") return;
+      if (event.key === "e" || event.key === "E") editor.toggleEditMode();
+      if (event.key === "s" || event.key === "S") downloadCurrentHtml();
+    });
+
+    window.addEventListener("beforeunload", () => editor.save());
+  </script>
+</body>
+</html>
